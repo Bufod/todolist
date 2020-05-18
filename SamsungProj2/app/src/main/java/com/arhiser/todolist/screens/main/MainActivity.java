@@ -39,17 +39,19 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     public static final int SETTINGS_ACTIVITY_CODE = 0;
+    public static final String MyPREFERENCES = "nightModePrefs";
+    public static final String KEY_ISNIGHTMODE = "isNightMode";
     public boolean recreate = false;
     SharedPreferences sharedPreferences;
-
-        public void main(String[] args){
-            SettingsActivity a = new SettingsActivity();
-            a.checkNightModeActivated();
-        }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        if(sharedPreferences.getBoolean(KEY_ISNIGHTMODE, false))
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        else
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = findViewById(R.id.toolbar);

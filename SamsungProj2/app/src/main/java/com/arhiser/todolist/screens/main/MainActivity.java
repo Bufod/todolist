@@ -1,6 +1,9 @@
 package com.arhiser.todolist.screens.main;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import com.arhiser.todolist.R;
@@ -22,6 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.PersistableBundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +38,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
+    public static final int SETTINGS_ACTIVITY_CODE = 0;
+    public boolean recreate = false;
+    SharedPreferences sharedPreferences;
 
         public void main(String[] args){
             SettingsActivity a = new SettingsActivity();
@@ -74,6 +81,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (recreate) {
+            recreate = false;
+            recreate();
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
@@ -84,8 +100,17 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.setting) {
             Toast.makeText(getApplicationContext(), "settings", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, SettingsActivity.class));
+            startActivityForResult(new Intent(this, SettingsActivity.class),
+                    SETTINGS_ACTIVITY_CODE);
         }
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SETTINGS_ACTIVITY_CODE && resultCode == RESULT_CANCELED){
+            recreate = true;
+        }
     }
 }
